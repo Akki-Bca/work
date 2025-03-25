@@ -1,0 +1,124 @@
+"use client";
+import React, { useState } from "react";
+
+interface BusinessFormData {
+  businessName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+}
+
+const BusinessRegistrationForm: React.FC = () => {
+  const [formData, setFormData] = useState<BusinessFormData>({
+    businessName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [errors, setErrors] = useState<Partial<BusinessFormData>>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validate = (): Partial<BusinessFormData> => {
+    let newErrors: Partial<BusinessFormData> = {};
+    if (!formData.businessName) newErrors.businessName = "Business Name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.phone) newErrors.phone = "Phone number is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
+    return newErrors;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      console.log("Business Registered", formData);
+      setErrors({});
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">Business Registration</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-gray-700 font-medium">Business Name</label>
+          <input
+            type="text"
+            name="businessName"
+            value={formData.businessName}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.businessName && <p className="text-red-500 text-sm">{errors.businessName}</p>}
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium">Business Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium">Phone</label>
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        </div>
+
+        <div>
+          <label className="block text-gray-700 font-medium">Confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white font-medium py-2 rounded hover:bg-blue-700 transition duration-300"
+        >
+          Register Business
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default BusinessRegistrationForm;
